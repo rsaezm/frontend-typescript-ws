@@ -1,0 +1,25 @@
+<form [formGroup]="Form" (submit)="Submit()">
+	<mat-card appearance="raised" class="p-4 min-w-96">
+		<mat-card-header>
+			<h4>Iniciar sesión</h4>
+		</mat-card-header>
+		<mat-card-content>
+			<div class="flex flex-col py-8 space-y-4">
+				<mat-form-field appearance="outline" floatLabel="always">
+					<mat-label>Correo electrónico</mat-label>
+					<input matInput type="email" translate="no" autocomplete="off" [formControlName]="'CorreoElectronico'" #correoElectronico />
+					@if (Form.controls.CorreoElectronico.errors?.required) { <mat-error>Debe ingresar su correo electrónico</mat-error> }
+					@if (Form.controls.CorreoElectronico.errors?.email) { <mat-error>El correo electrónico no es válido</mat-error> }
+				</mat-form-field>
+				<mat-form-field appearance="outline" floatLabel="always">
+					<mat-label>Contraseña</mat-label>
+					<input matInput type="password" translate="no" autocomplete="off" [formControlName]="'Password'" />
+					@if (Form.controls.Password.errors?.required) { <mat-error>Debe ingresar su contraseña</mat-error> }
+				</mat-form-field>
+			</div>
+		</mat-card-content>
+		<mat-card-actions align="end">
+			<button mat-flat-button color="primary" [disabled]="Form.disabled || Form.invalid">Ingresar</button>
+		</mat-card-actions>
+	</mat-card>
+</form>

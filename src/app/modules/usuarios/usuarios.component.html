@@ -1,0 +1,25 @@
+<div class="p-8 grid grid-cols-3 gap-6">
+	@for (usuario of Usuarios; track usuario.Id; let indice = $index; let primero = $first; let ultimo = $last)
+	{
+
+	<mat-card class="h-36 content-between">
+		<mat-card-header>
+			<mat-card-title>{{ usuario.CorreoElectronico }}</mat-card-title>
+		</mat-card-header>
+		<mat-card-content>{{ usuario.Username }}</mat-card-content>
+		<mat-card-footer class="p-4 space-x-4">
+			<button mat-stroked-button type="button" (click)="Delete(usuario)">Eliminar</button>
+			<a mat-flat-button [routerLink]="['editar', usuario.Id]">Editar</a>
+		</mat-card-footer>
+	</mat-card>
+
+	}
+
+	<mat-card class="bg-current text-current h-36">
+		<mat-card-title class="text-center content-center h-full cursor-pointer">
+			<a [routerLink]="['crear']" class="no-underline">
+				Crear nuevo usuario
+			</a>
+		</mat-card-title>
+	</mat-card>
+</div>

@@ -1,0 +1,83 @@
+import { JsonPipe } from '@angular/common'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core'
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
+import { MatButtonModule } from '@angular/material/button'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatInputModule } from '@angular/material/input'
+import { ActivatedRoute, Router } from '@angular/router'
+import { Subject, Subscription, takeUntil } from 'rxjs'
+import { UsuariosService } from '../../usuarios.service'
+import { MatDividerModule } from '@angular/material/divider'
+import { IUsuarioEntity } from 'dominio/interfaces'
+import { MatDialog } from '@angular/material/dialog'
+
+@Component({
+	selector: 'usuario-form',
+	standalone: true,
+	imports: [
+		FormsModule,
+		JsonPipe,
+		MatButtonModule,
+		MatDividerModule,
+		MatFormFieldModule,
+		MatInputModule,
+		ReactiveFormsModule,
+	],
+	templateUrl: './usuario-form.component.html',
+	encapsulation: ViewEncapsulation.None,
+	changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class UsuarioFormComponent implements OnInit, OnDestroy {
+	private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+	private formBuilder: FormBuilder = inject(FormBuilder);
+	private router: Router = inject(Router);
+	private unsubscribeAll: Subject<Subscription[]> = new Subject<Subscription[]>();
+	private usuariosService: UsuariosService = inject(UsuariosService);
+
+	public Form: FormGroup
+	public Modo: 'Crear' | 'Actualizar'
+
+	public ngOnInit(): void {
+		this.Modo = this.activatedRoute.snapshot.params.id ? 'Actualizar' : 'Crear'
+
+		this.Form = this.formBuilder.group({
+			CorreoElectronico: this.formBuilder.control('', { validators: [Validators.required, Validators.email] }),
+			Username: this.formBuilder.control('', { validators: [] })
+		})
+
+		this.usuariosService.Usuario$
+			.pipe(takeUntil(this.unsubscribeAll))
+			.subscribe(response => {
+				this.Form.patchValue(response)
+				this.changeDetectorRef.markForCheck()
+			})
+	}
+
+	public ngOnDestroy(): void {
+		this.unsubscribeAll.next(null)
+		this.unsubscribeAll.complete()
+
+		this.usuariosService.Reset()
+	}
+
+	public Cancelar() {
+		this.Modo == 'Crear'
+			? this.router.navigate(['../'], { relativeTo: this.activatedRoute })
+			: this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
+	}
+
+	public Submit() {
+		if (this.Form.invalid) return
+
+		const entity: IUsuarioEntity = this.Form.value
+
+		this.Form.disable();
+
+		(this.Modo == 'Crear' ? this.usuariosService.Crear(entity) : this.usuariosService.Modificar(this.activatedRoute.snapshot.params.id, entity))
+			.pipe(takeUntil(this.unsubscribeAll))
+			.subscribe(() => {
+				this.Cancelar()
+			})
+	}
+}

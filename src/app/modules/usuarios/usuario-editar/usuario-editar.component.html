@@ -1,0 +1,20 @@
+<div class="flex justify-center p-8">
+	<form class="border w-80 p-6 space-y-4 bg-white rounded-md shadow" [formGroup]="Form" (submit)="Submit()">
+		<mat-form-field class="w-full" appearance="outline" floatLabel="always">
+			<mat-label>Correo electrónico</mat-label>
+			<input matInput autocomplete="off" translate="no" [formControlName]="'CorreoElectronico'" />
+		</mat-form-field>
+
+		<mat-form-field class="w-full" appearance="outline" floatLabel="always">
+			<mat-label>Usuario</mat-label>
+			<input matInput autocomplete="off" translate="no" [formControlName]="'Username'" />
+		</mat-form-field>
+
+		<mat-divider></mat-divider>
+
+		<div class="space-x-4">
+			<button mat-stroked-button type="button" [disabled]="Form.disabled" (click)="Cancelar()">Cancelar</button>
+			<button mat-flat-button type="submit" [disabled]="Form.disabled || Form.invalid">Actualizar</button>
+		</div>
+	</form>
+</div>
