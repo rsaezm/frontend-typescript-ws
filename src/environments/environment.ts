@@ -1,6 +1,6 @@
 export const environment = {
 	production: true,
-	Url: 'https://www.margotta.cl',
-	Api: 'https://backend.margotta.cl/api',
-	Websocket: 'http://backend.margotta.cl'
+	Url: 'https://frontend-typescript-ws.onrender.com',
+	Api: 'https://backend-typescript-ws.onrender.com/api',
+	Websocket: 'https://backend-typescript-ws.onrender.com'
 }
