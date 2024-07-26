@@ -1,6 +1,6 @@
 export const environment = {
-	production: false,
-	Url: 'http://localhost:4200',
-	Api: 'http://localhost:3000/api',
-	Websocket: 'http://localhost:3000'
+	production: true,
+	Url: 'https://frontend-typescript-ws.onrender.com',
+	Api: 'https://backend-typescript-ws.onrender.com/api',
+	Websocket: 'https://backend-typescript-ws.onrender.com'
 }
